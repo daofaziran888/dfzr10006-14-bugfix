@@ -18,8 +18,9 @@ import MetricView from './views/metric'
 import WhitelistView from './views/whitelist'
 import BalanceView from './views/balance'
 import RollbackView from './views/rollback'
+import ReceiptsView from './views/receipts'
 
-const navItems = [{ label: "运营概览", path: "/" }, { label: "服务注册发现", path: "/registry" }, { label: "查询路由分发", path: "/router" }, { label: "结果缓存加速", path: "/cache" }, { label: "调用限流降级", path: "/limiter" }, { label: "服务编排组合", path: "/orchestra" }, { label: "调用链追踪", path: "/trace" }, { label: "服务健康诊断", path: "/diagnose" }, { label: "数据接口契约", path: "/schema" }, { label: "数据订阅推送", path: "/subscribe" }, { label: "数据加工转换", path: "/transform" }, { label: "数据模拟服务", path: "/mock" }, { label: "接入网关管理", path: "/gateway" }, { label: "服务指标采集", path: "/metric" }, { label: "调用来源管理", path: "/whitelist" }, { label: "负载均衡策略", path: "/balance" }, { label: "服务版本回退", path: "/rollback" }]
+const navItems = [{ label: "运营概览", path: "/" }, { label: "服务注册发现", path: "/registry" }, { label: "查询路由分发", path: "/router" }, { label: "结果缓存加速", path: "/cache" }, { label: "调用限流降级", path: "/limiter" }, { label: "服务编排组合", path: "/orchestra" }, { label: "调用链追踪", path: "/trace" }, { label: "服务健康诊断", path: "/diagnose" }, { label: "数据接口契约", path: "/schema" }, { label: "数据订阅推送", path: "/subscribe" }, { label: "数据加工转换", path: "/transform" }, { label: "数据模拟服务", path: "/mock" }, { label: "接入网关管理", path: "/gateway" }, { label: "服务指标采集", path: "/metric" }, { label: "调用来源管理", path: "/whitelist" }, { label: "负载均衡策略", path: "/balance" }, { label: "服务版本回退", path: "/rollback" }, { label: "回滚回执", path: "/receipts" }]
 
 export default function App() {
   const [operator] = useState('值班管理员')
@@ -59,6 +60,7 @@ export default function App() {
           <Route path="/whitelist" element={<WhitelistView />} />
           <Route path="/balance" element={<BalanceView />} />
           <Route path="/rollback" element={<RollbackView />} />
+          <Route path="/receipts" element={<ReceiptsView />} />
         </Routes>
       </main>
     </div>

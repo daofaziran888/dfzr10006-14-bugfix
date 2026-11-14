@@ -22,5 +22,6 @@ from app.routers import metric as router_metric
 from app.routers import whitelist as router_whitelist
 from app.routers import balance as router_balance
 from app.routers import rollback as router_rollback
+from app.routers import receipts as router_receipts
 
-ROUTERS = [router_registry, router_router, router_cache, router_limiter, router_orchestra, router_trace, router_diagnose, router_schema, router_subscribe, router_transform, router_mock, router_gateway, router_metric, router_whitelist, router_balance, router_rollback]
+ROUTERS = [router_registry, router_router, router_cache, router_limiter, router_orchestra, router_trace, router_diagnose, router_schema, router_subscribe, router_transform, router_mock, router_gateway, router_metric, router_whitelist, router_balance, router_rollback, router_receipts]

@@ -1,6 +1,8 @@
 """调用限流降级业务规则：状态流转、字段校验与筛选口径都收在这里。"""
 from __future__ import annotations
 
+import threading
+from datetime import datetime
 from typing import Any
 
 from app.store import store
@@ -10,6 +12,44 @@ REQUIRED_FIELDS = ["规则编号", "限流对象", "限流算法"]
 STATUS_ORDER = ["草稿", "生效中", "已触发", "已关闭"]
 ACTION_RULES = {"启用限流": "草稿", "触发降级": "生效中", "关闭限流": "已触发"}
 NEGATIVE_ACTIONS = []
+
+_degradation_lock = threading.Lock()
+
+
+def _now() -> str:
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def trigger_degradation(flow_no: str) -> dict[str, Any]:
+    """编排回滚失败时调用的限流降级预案。
+
+    选取一条生效中的限流规则并置为“已触发”，记录触发时间与来源流程，
+    供回滚回执引用。没有可用规则时返回一份显式的兜底说明，避免回执缺字段。
+    """
+    with _degradation_lock:
+        target = next(
+            (row for row in store.rows(MODULE) if row.get("status") == "生效中"),
+            None,
+        )
+        if target is None:
+            return {
+                "规则编号": "N/A",
+                "降级动作": "无生效限流规则，采用兜底降级（快速失败）",
+                "触发时间": _now(),
+                "来源流程": flow_no,
+            }
+        target["status"] = "已触发"
+        target["pending"] = False
+        target["abnormal"] = True
+        target["触发时间"] = _now()
+        target["降级来源流程"] = flow_no
+        return {
+            "规则编号": target.get("规则编号"),
+            "限流对象": target.get("限流对象"),
+            "降级动作": target.get("降级动作"),
+            "触发时间": target["触发时间"],
+            "来源流程": flow_no,
+        }
 
 
 class LimiterService:
